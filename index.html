@@ -186,8 +186,8 @@
             padding: 0;
         }
 
-        .score-item {
-            padding: 16px;
+.score-item {
+    padding: 8px 16px;
             border-bottom: 1px solid #f5f5f5;
             display: flex;
             flex-direction: column;
@@ -383,6 +383,17 @@
                 border-bottom-color: #2e2e2e;
             }
         }
+        .toggle-icon {
+    margin-left: 8px;
+    font-size: 1rem;
+    user-select: none;
+}
+.current-score {
+    font-size: 0.85rem;
+    padding: 4px 10px;
+    margin-left: 4px;
+}
+
     </style>
 </head>
 <body>
@@ -660,10 +671,15 @@
 
                 const header = document.createElement('div');
                 header.className = `score-card-header ${type === 'defective' ? 'defective' : ''}`;
-                header.innerHTML = `
-                    <h3>${title}</h3>
-                    <span id="${type}Score" class="current-score">0/0</span>
-                `;
+header.innerHTML = `
+    <div style="display: flex; align-items: center; gap: 8px;">
+        <h3 style="margin: 0;">${title}</h3>
+        <span id="${type}Score" class="current-score">0/0</span>
+    </div>
+    <span class="toggle-icon">▼</span>
+`;
+
+
 
                 const list = document.createElement('ul');
                 list.id = `${type}ItemList`;
@@ -671,6 +687,23 @@
 
                 card.appendChild(header);
                 card.appendChild(list);
+list.style.display = 'none';
+
+header.addEventListener('click', () => {
+    const isCurrentlyVisible = list.style.display === 'block';
+
+    // Collapse all
+    document.querySelectorAll('.score-item-list').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.toggle-icon').forEach(icon => icon.textContent = '▼');
+
+    // Toggle this one
+    if (!isCurrentlyVisible) {
+        list.style.display = 'block';
+        header.querySelector('.toggle-icon').textContent = '▲';
+    }
+});
+
+
 
                 return card;
             },
