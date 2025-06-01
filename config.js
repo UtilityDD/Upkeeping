@@ -95,7 +95,7 @@ recordKeepingItems: [
             'High Voltage detector',
             'Raincoat',
             'Gumboot'
-        ]
+        ],
         substations: {
             'North Division': ['Rajouri Garden 33kV', 'Pitampura 66kV', 'Model Town 33kV', 'Rohini 220kV'],
             'South Division': ['Vasant Kunj 66kV', 'Saket 33kV', 'Hauz Khas 66kV', 'Greater Kailash 33kV'],
