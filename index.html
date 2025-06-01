@@ -425,12 +425,13 @@
                     ]
                 },
                 defective: {
-                    scoreOptions: [
-                        { label: 'Sufficient / good condition', score: 2 },
-                        { label: 'Damaged / insufficient', score: 1 },
-                        { label: 'Insufficient / Not available', score: 0 }
-                    ]
-                },
+    scoreOptions: [
+        { label: 'Nil', score: 2 },
+        { label: '1/2 No.', score: 1 },
+        { label: '>=3 No.', score: 0 }
+    ]
+},
+
                 recordKeeping: {
                     scoreOptions: [
                         { label: 'Well maintained', score: 2 },
@@ -464,15 +465,20 @@
                 ],
                 
                 defectiveItems: [
-                    { name: 'Lightning Arrester', maxPoints: 2 },
-                    { name: 'Insulator', maxPoints: 2 },
-                    { name: 'Circuit Breaker', maxPoints: 2 },
-                    { name: 'Transformer', maxPoints: 2 },
-                    { name: 'Busbar', maxPoints: 2 },
-                    { name: 'Control Panel', maxPoints: 2 },
-                    { name: 'Battery', maxPoints: 2 },
-                    { name: 'Earthing System', maxPoints: 2 }
-                ],
+    { name: 'Switchgear', maxPoints: 2 },
+    { name: 'Ammeter/ voltmeter in circuit', maxPoints: 2 },
+    { name: 'Relays in circuit', maxPoints: 2 },
+    { name: 'Indication lamp', maxPoints: 2 },
+    { name: 'Annunciation (hooter)', maxPoints: 2 },
+    { name: 'Cell tester', maxPoints: 2 },
+    { name: 'Hydrometer', maxPoints: 2 },
+    { name: 'CT / PT (33kV & 11kV)', maxPoints: 2 },
+    { name: 'LA (33kV & 11kV)', maxPoints: 2 },
+    { name: 'Yard-light', maxPoints: 2 },
+    { name: 'Tube-lights in control room', maxPoints: 2 },
+    { name: 'Fans in control room', maxPoints: 2 }
+],
+
 
                 recordKeepingItems: [
                     'Standard size SLD',
