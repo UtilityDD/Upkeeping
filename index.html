@@ -1,4 +1,4 @@
-k<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -14,7 +14,7 @@ k<!DOCTYPE html>
         }
 
         body {
-           font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: #f5f5f5;
             color: #212121;
             font-size: 14px;
@@ -116,10 +116,10 @@ k<!DOCTYPE html>
         }
 
         .form-select, .form-input {
-            padding: 7px;
+            padding: 12px;
             border: 1px solid #e0e0e0;
             border-radius: 6px;
-            font-size: 0.6rem;
+            font-size: 0.9rem;
             background: white;
             color: #424242;
             transition: border-color 0.2s;
@@ -140,29 +140,23 @@ k<!DOCTYPE html>
             overflow: hidden;
         }
 
-        .score-card-header {
-            padding: 10px;
-            background: linear-gradient(135deg, #1976d2, #42a5f5);
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            user-select: none;
-            transition: background 0.2s;
-        }
+.score-card-header {
+    padding: 16px;
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+}
+
 
         .score-card-header:active {
             background: linear-gradient(135deg, #1565c0, #1976d2);
         }
 
-        .score-card-header.defective {
-            background: linear-gradient(135deg, #1976d2, #42a5f5);
-        }
-
-        .score-card-header.defective:active {
-            background: linear-gradient(135deg, #1565c0, #1976d2);
-        }
 
         .score-card-header h3 {
             font-size: 1rem;
@@ -170,16 +164,15 @@ k<!DOCTYPE html>
             letter-spacing: 0.5px;
         }
 
-        .current-score {
-            font-size: 0.9rem;
-            font-weight: 700;
-            padding: 6px 12px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 20px;
-            min-width: 50px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
+.current-score {
+    font-size: 0.85rem;
+    padding: 4px 10px;
+    margin-left: 4px;
+    background: white;
+    color: black;
+    border: 1px solid #ccc;
+}
+
 
         .score-item-list {
             list-style: none;
@@ -187,7 +180,7 @@ k<!DOCTYPE html>
         }
 
 .score-item {
-    padding: 8px 9px;
+    padding: 8px 16px;
             border-bottom: 1px solid #f5f5f5;
             display: flex;
             flex-direction: column;
@@ -201,7 +194,7 @@ k<!DOCTYPE html>
         .item-name {
             font-weight: 500;
             font-size: 0.9rem;
-            color: white;
+            color: #424242;
             line-height: 1.3;
         }
 
@@ -212,19 +205,23 @@ k<!DOCTYPE html>
         }
 
         /* Modern Material Buttons */
-        .score-btn {
-            padding: 12px 8px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.2s ease;
-            user-select: none;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
+.score-btn {
+    padding: 12px 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+    user-select: none;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    background: white;
+    color: black; /* ← Make text black */
+}
+
+
 
         .score-btn::before {
             content: '';
@@ -242,28 +239,18 @@ k<!DOCTYPE html>
             opacity: 1;
         }
 
-        .score-btn.good {
-            background: linear-gradient(135deg, #4caf50, #66bb6a);
-            color: white;
-        }
-        
-        .score-btn.average {
-            background: linear-gradient(135deg, #ff9800, #ffb74d);
-            color: white;
-        }
-        
-        .score-btn.bad {
-            background: linear-gradient(135deg, #f44336, #ef5350);
-            color: white;
-        }
 
-   .score-btn.selected {
-    background: #ffffff !important;
-    color: #000 !important;
-    border: 2px solid #000 !important;
-    box-shadow: 0 0 8px 3px rgba(0, 0, 0, 0.3);
-    transform: scale(1.02);
-    font-weight: 700;
+.score-btn.selected.good {
+    background: #4caf50 !important; /* green */
+    color: black;
+}
+.score-btn.selected.average {
+    background: #f9a825 !important; /* dark yellow */
+    color: black;
+}
+.score-btn.selected.bad {
+    background: #e53935 !important; /* red */
+    color: black;
 }
 
 
@@ -431,13 +418,12 @@ k<!DOCTYPE html>
                     ]
                 },
                 defective: {
-    scoreOptions: [
-        { label: 'Nil', score: 2 },
-        { label: '1/2 No.', score: 1 },
-        { label: '>=3 No.', score: 0 }
-    ]
-},
-
+                    scoreOptions: [
+                        { label: 'Sufficient / good condition', score: 2 },
+                        { label: 'Damaged / insufficient', score: 1 },
+                        { label: 'Insufficient / Not available', score: 0 }
+                    ]
+                },
                 recordKeeping: {
                     scoreOptions: [
                         { label: 'Well maintained', score: 2 },
@@ -458,7 +444,21 @@ k<!DOCTYPE html>
                         { label: 'Damaged / insufficient', score: 1 },
                         { label: 'Insufficient / Not available', score: 0 }
                     ]
-                }
+                },
+                aesthetics: {
+    scoreOptions: [
+        { label: 'Yes', score: 5 },
+        { label: 'No', score: -5 },
+        { label: 'Sometimes', score: -3 },
+        { label: 'Few', score: -3 },
+        { label: 'Some are open', score: -3 },
+        { label: 'Most are open', score: -5 },
+        { label: 'Covered', score: 5 },
+        { label: 'Have, but poorly maintained', score: 3 },
+        { label: 'Partially', score: -3 }
+    ]
+}
+
             },
 
             data: {
@@ -471,66 +471,15 @@ k<!DOCTYPE html>
                 ],
                 
                 defectiveItems: [
-    { name: 'Switchgear', maxPoints: 2 },
-    { name: 'Ammeter/ voltmeter in circuit', maxPoints: 2 },
-    { name: 'Relays in circuit', maxPoints: 2 },
-    { name: 'Indication lamp', maxPoints: 2 },
-    { name: 'Annunciation (hooter)', maxPoints: 2 },
-    { name: 'Cell tester', maxPoints: 2 },
-    { name: 'Hydrometer', maxPoints: 2 },
-    { name: 'CT / PT (33kV & 11kV)', maxPoints: 2 },
-    { name: 'LA (33kV & 11kV)', maxPoints: 2 },
-    { name: 'Yard-light', maxPoints: 2 },
-    { name: 'Tube-lights in control room', maxPoints: 2 },
-    { name: 'Fans in control room', maxPoints: 2 }
-],
-
-aesthetics: {
-    scoreOptionsMap: {
-        'Beds in control room': [
-            { label: 'Yes', score: -5 },
-            { label: 'No', score: 5 }
-        ],
-        'TV set in control room': [
-            { label: 'Yes', score: -5 },
-            { label: 'No', score: 5 },
-            { label: 'Sometimes', score: -3 }
-        ],
-        'Operating persons dressed properly?': [
-            { label: 'Yes', score: -5 },
-            { label: 'No', score: 5 }
-        ],
-        'Switchgear / feeder / PTR name-plates: large, good quality, painted or printed (not in normal page) or plastic sticker?': [
-            { label: 'Yes', score: 7 },
-            { label: 'No', score: -7 },
-            { label: 'Few', score: -3 }
-        ],
-        'Operating persons always uses helmet when enter switch yard?': [
-            { label: 'Yes', score: 5 },
-            { label: 'No', score: -5 }
-        ],
-        'Back-side of switchgears / panels': [
-            { label: 'Covered', score: 5 },
-            { label: 'Some are open', score: -3 },
-            { label: 'Most are open', score: -5 }
-        ],
-        'Cable trench': [
-            { label: 'Covered', score: 5 },
-            { label: 'Some are open', score: -3 },
-            { label: 'Most are open', score: -5 }
-        ],
-        'Is there flower bed / well maintained garden / plantation?': [
-            { label: 'Yes', score: 5 },
-            { label: 'Have, but poorly maintained', score: 3 },
-            { label: 'No', score: 0 }
-        ],
-        'Last condition monitoring issues complied with?': [
-            { label: 'Yes', score: 10 },
-            { label: 'Partially', score: -3 },
-            { label: 'No', score: -5 }
-        ]
-    }
-},
+                    { name: 'Lightning Arrester', maxPoints: 2 },
+                    { name: 'Insulator', maxPoints: 2 },
+                    { name: 'Circuit Breaker', maxPoints: 2 },
+                    { name: 'Transformer', maxPoints: 2 },
+                    { name: 'Busbar', maxPoints: 2 },
+                    { name: 'Control Panel', maxPoints: 2 },
+                    { name: 'Battery', maxPoints: 2 },
+                    { name: 'Earthing System', maxPoints: 2 }
+                ],
 
                 recordKeepingItems: [
                     'Standard size SLD',
@@ -571,16 +520,77 @@ aesthetics: {
                     'Gumboot'
                 ],
 aestheticsItems: [
-    { name: 'Beds in control room', maxPoints: 5 },
-    { name: 'TV set in control room', maxPoints: 5 },
-    { name: 'Operating persons dressed properly?', maxPoints: 5 },
-    { name: 'Switchgear / feeder / PTR name-plates: large, good quality, painted or printed (not in normal page) or plastic sticker?', maxPoints: 7 },
-    { name: 'Operating persons always uses helmet when enter switch yard?', maxPoints: 5 },
-    { name: 'Back-side of switchgears / panels', maxPoints: 5 },
-    { name: 'Cable trench', maxPoints: 5 },
-    { name: 'Is there flower bed / well maintained garden / plantation?', maxPoints: 5 },
-    { name: 'Last condition monitoring issues complied with?', maxPoints: 10 }
+    {
+        name: 'Beds in control room',
+        scoreOptions: [
+            { label: 'Yes', score: -5 },
+            { label: 'No', score: 5 }
+        ]
+    },
+    {
+        name: 'TV set in control room',
+        scoreOptions: [
+            { label: 'Yes', score: -5 },
+            { label: 'No', score: 5 },
+            { label: 'Sometimes', score: -3 }
+        ]
+    },
+    {
+        name: 'Operating persons dressed properly?',
+        scoreOptions: [
+            { label: 'Yes', score: -5 },
+            { label: 'No', score: 5 }
+        ]
+    },
+    {
+        name: 'Switchgear / feeder / PTR name-plates quality',
+        scoreOptions: [
+            { label: 'Yes', score: 7 },
+            { label: 'No', score: -7 },
+            { label: 'Few', score: -3 }
+        ]
+    },
+    {
+        name: 'Helmet use in switch yard',
+        scoreOptions: [
+            { label: 'Yes', score: 5 },
+            { label: 'No', score: -5 }
+        ]
+    },
+    {
+        name: 'Back-side of switchgears / panels',
+        scoreOptions: [
+            { label: 'Covered', score: 5 },
+            { label: 'Some are open', score: -3 },
+            { label: 'Most are open', score: -5 }
+        ]
+    },
+    {
+        name: 'Cable trench cover status',
+        scoreOptions: [
+            { label: 'Covered', score: 5 },
+            { label: 'Some are open', score: -3 },
+            { label: 'Most are open', score: -5 }
+        ]
+    },
+    {
+        name: 'Garden / plantation condition',
+        scoreOptions: [
+            { label: 'Yes', score: 5 },
+            { label: 'No', score: 0 },
+            { label: 'Have, but poorly maintained', score: 3 }
+        ]
+    },
+    {
+        name: 'Last condition monitoring issues complied with?',
+        scoreOptions: [
+            { label: 'Yes', score: 10 },
+            { label: 'No', score: -5 },
+            { label: 'Partially', score: -3 }
+        ]
+    }
 ],
+
 
 
                 substations: {
@@ -607,12 +617,13 @@ aestheticsItems: [
                 return total > 0 ? (completed / total) * 100 : 0;
             },
 
-            getProgressClass: (completed, total) => {
-                const percentage = Utils.calculateProgress(completed, total);
-                if (percentage === 100) return CONFIG.ui.progressClasses.good;
-                if (percentage >= 50) return CONFIG.ui.progressClasses.average;
-                return CONFIG.ui.progressClasses.bad;
-            },
+getProgressClass: (completed, total) => {
+    if (total === 0 || completed === 0) return ''; // white always if none done
+    if (completed === total) return CONFIG.ui.progressClasses.good; // green only if all items scored
+    return ''; // white for partial
+},
+
+
 
             createElement: (tag, attributes = {}, textContent = '') => {
                 const element = document.createElement(tag);
@@ -732,243 +743,219 @@ aestheticsItems: [
             }
         };
 
-  
+        // Score Card Component
+        const ScoreCardComponent = {
+            createScoreCard: (type, title, items, maxScore) => {
+                const card = document.createElement('div');
+                card.className = 'score-card';
+                card.id = `${type}Card`;
 
-        function getScoreClass(score) {
-            switch (score) {
-                case 2: return 'good';
-                case 1: return 'average';
-                case 0: return 'bad';
-                default: return '';
+                const header = document.createElement('div');
+                header.className = `score-card-header ${type === 'defective' ? 'defective' : ''}`;
+header.innerHTML = `
+    <div style="display: flex; align-items: center; gap: 8px;">
+        <h3 style="margin: 0;">${title}</h3>
+        <span id="${type}Score" class="current-score">0/0</span>
+    </div>
+    <span class="toggle-icon">▼</span>
+`;
+
+
+
+                const list = document.createElement('ul');
+                list.id = `${type}ItemList`;
+                list.className = 'score-item-list';
+
+                card.appendChild(header);
+                card.appendChild(list);
+list.style.display = 'none';
+
+header.addEventListener('click', () => {
+    const isCurrentlyVisible = list.style.display === 'block';
+
+    // Collapse all
+    document.querySelectorAll('.score-item-list').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.toggle-icon').forEach(icon => icon.textContent = '▼');
+
+    // Toggle this one
+    if (!isCurrentlyVisible) {
+        list.style.display = 'block';
+        header.querySelector('.toggle-icon').textContent = '▲';
+    }
+});
+
+
+
+                return card;
+            },
+
+            populateItems: (type, items, scoreOptions) => {
+                const list = document.getElementById(`${type}ItemList`);
+                if (!list) return;
+
+                list.innerHTML = '';
+
+                items.forEach((item, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'score-item';
+
+                    const label = document.createElement('span');
+                    label.className = 'item-name';
+                    label.textContent = item.name || item.label || item;
+
+                    const controls = document.createElement('div');
+                    controls.className = 'item-controls';
+
+const options = item.scoreOptions || scoreOptions;
+
+// Find highest and lowest score values
+const scores = options.map(opt => opt.score);
+const maxScore = Math.max(...scores);
+const minScore = Math.min(...scores);
+
+options.forEach(option => {
+    const button = document.createElement('button');
+    button.className = `score-btn`;
+    button.textContent = option.label;
+
+    // Assign color class based on value range
+    if (option.score === maxScore) button.classList.add('good');
+    else if (option.score === minScore) button.classList.add('bad');
+    else button.classList.add('average');
+
+    // If selected, add .selected
+    if (item.score === option.score) {
+        button.classList.add('selected');
+    }
+
+    button.addEventListener('click', () => {
+        App.setScore(type, index, option.score);
+    });
+
+    controls.appendChild(button);
+});
+
+
+                    listItem.appendChild(label);
+                    listItem.appendChild(controls);
+                    list.appendChild(listItem);
+                });
             }
-        }
+        };
+
+function getScoreClass(score) {
+    if (score >= 3) return 'good';
+    if (score === 1 || score === 2) return 'average';
+    if (score <= -1) return 'bad';
+    return '';
+}
+
+
 
         // Main Application
-        
+        const App = {
+            cleanlinessItems: [],
+            defectiveItems: [],
+            recordKeepingItems: [],
+            essentialsItems: [],
+            safetyItems: [],
+
+            init: () => {
+                App.cleanlinessItems = CONFIG.data.cleanlinessItems.map(item => ({...item, score: null}));
+                App.defectiveItems = CONFIG.data.defectiveItems.map(item => ({...item, score: null}));
+                App.recordKeepingItems = CONFIG.data.recordKeepingItems.map(item => ({ name: item, score: null }));
+                App.essentialsItems = CONFIG.data.essentialsItems.map(item => ({ name: item, score: null }));
+                App.safetyItems = CONFIG.data.safetyItems.map(item => ({ name: item, score: null }));
+App.aestheticsItems = CONFIG.data.aestheticsItems.map(item => ({
+    ...item,
+    score: null
+}));
+
+
+                ProgressComponent.init('progressContainer');
+                FormComponent.init('formContainer');
+                App.initializeScoreCards();
+                App.updateAllScores();
+            },
+
+            initializeScoreCards: () => {
+                const container = document.getElementById('scoreCardsContainer');
+
+                const createCard = (id, label, items, max, scoreConfigKey) => {
+                    const card = ScoreCardComponent.createScoreCard(id, label, items, max);
+                    container.appendChild(card);
+                    ScoreCardComponent.populateItems(id, items, CONFIG.scoring[scoreConfigKey].scoreOptions);
+                };
+
+                createCard('cleanliness', 'Cleanliness', App.cleanlinessItems, 30, 'cleanliness');
+                createCard('defective', 'Defective Items', App.defectiveItems, 16, 'defective');
+                createCard('recordKeeping', 'Record Keeping', App.recordKeepingItems, 11, 'recordKeeping');
+                createCard('essentials', 'Essentials', App.essentialsItems, 10, 'essentials');
+                createCard('safety', 'Safety', App.safetyItems, 9, 'safety');
+                createCard('aesthetics', 'Aesthetics / Discipline / Good Practices', App.aestheticsItems, 9, 'aesthetics');
+
+            },
+
+            setScore: (type, itemIndex, score) => {
+                const map = {
+                    cleanliness: App.cleanlinessItems,
+                    defective: App.defectiveItems,
+                    recordKeeping: App.recordKeepingItems,
+                    essentials: App.essentialsItems,
+                    safety: App.safetyItems,
+                    aesthetics: App.aestheticsItems
+
+                };
+
+                if (map[type]) {
+                    map[type][itemIndex].score = score;
+                    ScoreCardComponent.populateItems(type, map[type], CONFIG.scoring[type].scoreOptions);
+                }
+
+                App.updateAllScores();
+            },
+
+            updateAllScores: () => {
+                const types = ['cleanliness', 'defective', 'recordKeeping', 'essentials', 'safety'];
+                let totalCompleted = 0;
+                let totalPoints = 0;
+
+                const maxItems = {
+                    cleanliness: 5,
+                    defective: 8,
+                    recordKeeping: 11,
+                    essentials: 10,
+                    safety: 9,
+                    aesthetics: 9
+                };
+types.push('aesthetics');
+                types.forEach(type => {
+                    const items = App[`${type}Items`];
+                    const completed = Utils.countCompleted(items);
+                    const points = Utils.calculateTotalPoints(items);
+                    App.updateCardScore(type, completed, points, maxItems[type]);
+                    totalCompleted += completed;
+                    totalPoints += points;
+                });
+
+ const overallMaxCompleted = 52;
+const overallMaxPoints = 86 + maxPossiblePointsFromAesthetics; // Estimate based on logic
+
+
+                ProgressComponent.update(totalCompleted, overallMaxCompleted, totalPoints, overallMaxPoints);
+            },
+
+            updateCardScore: (type, completed, points, maxItems) => {
+                const scoreElement = document.getElementById(type + 'Score');
+                if (scoreElement) {
+scoreElement.textContent = `Item: ${completed} / Score: ${points}`;
+                    scoreElement.className = `current-score ${Utils.getProgressClass(completed, maxItems)}`;
+                }
+            }
+        };
 
         // Initialize app when DOM is loaded
         document.addEventListener('DOMContentLoaded', App.init);
-
-const ScoreCardComponent = {
-      createScoreCard: (type, title, items, maxScore) => {
-        const card = document.createElement('div');
-        card.className = 'score-card';
-        card.id = `${type}Card`;
-
-        const header = document.createElement('div');
-        header.className = `score-card-header ${type === 'defective' ? 'defective' : ''}`;
-        header.innerHTML = `
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <h3 style="margin: 0;">${title}</h3>
-            <span id="${type}Score" class="current-score">0/0</span>
-          </div>
-          <span class="toggle-icon">▼</span>
-        `;
-
-        const list = document.createElement('ul');
-        list.id = `${type}ItemList`;
-        list.className = 'score-item-list';
-        list.style.display = 'none';
-
-        header.addEventListener('click', () => {
-          const isVisible = list.style.display === 'block';
-          document.querySelectorAll('.score-item-list').forEach(el => el.style.display = 'none');
-          document.querySelectorAll('.toggle-icon').forEach(icon => icon.textContent = '▼');
-          if (!isVisible) {
-            list.style.display = 'block';
-            header.querySelector('.toggle-icon').textContent = '▲';
-          }
-        });
-
-        card.appendChild(header);
-        card.appendChild(list);
-        return card;
-      },
-
-      populateItems: (type, items, scoreOptions) => {
-        const list = document.getElementById(`${type}ItemList`);
-        if (!list) return;
-
-        list.innerHTML = '';
-        items.forEach((item, index) => {
-          const listItem = document.createElement('li');
-          listItem.className = 'score-item';
-          const label = document.createElement('span');
-          label.className = 'item-name';
-          label.textContent = item.name || item.label || item;
-
-          const controls = document.createElement('div');
-          controls.className = 'item-controls';
-
-          scoreOptions.forEach(option => {
-            const button = document.createElement('button');
-            button.className = `score-btn ${getScoreClass(option.score)}`;
-            button.textContent = option.label;
-
-            if (item.score === option.score) {
-              button.classList.add('selected');
-            }
-
-            button.addEventListener('click', () => {
-              App.setScore(type, index, option.score);
-            });
-
-            controls.appendChild(button);
-          });
-
-          listItem.appendChild(label);
-          listItem.appendChild(controls);
-          list.appendChild(listItem);
-        });
-      },
-
-      populateItemsWithMap: (type, items, scoreOptionsMap) => {
-        const list = document.getElementById(`${type}ItemList`);
-        if (!list) return;
-
-        list.innerHTML = '';
-        items.forEach((item, index) => {
-          const listItem = document.createElement('li');
-          listItem.className = 'score-item';
-          const label = document.createElement('span');
-          label.className = 'item-name';
-          label.textContent = item.name;
-
-          const controls = document.createElement('div');
-          controls.className = 'item-controls';
-          const options = CONFIG.scoring.aesthetics.scoreOptionsMap[item.name] || [];
-
-          options.forEach(option => {
-            const button = document.createElement('button');
-            button.className = `score-btn ${getScoreClass(option.score)}`;
-            button.textContent = option.label;
-
-            if (item.score === option.score) {
-              button.classList.add('selected');
-            }
-
-            button.addEventListener('click', () => {
-              App.setScore(type, index, option.score);
-            });
-
-            controls.appendChild(button);
-          });
-
-          listItem.appendChild(label);
-          listItem.appendChild(controls);
-          list.appendChild(listItem);
-        });
-      }
-    };
-
-    function getScoreClass(score) {
-      switch (score) {
-        case 2: return 'good';
-        case 1: return 'average';
-        case 0: return 'bad';
-        default: return '';
-      }
-    }
-
-    const App = {
-      cleanlinessItems: [],
-      defectiveItems: [],
-      recordKeepingItems: [],
-      essentialsItems: [],
-      safetyItems: [],
-      aestheticsItems: [],
-
-      init: () => {
-        App.cleanlinessItems = CONFIG.data.cleanlinessItems.map(item => ({...item, score: null}));
-        App.defectiveItems = CONFIG.data.defectiveItems.map(item => ({...item, score: null}));
-        App.recordKeepingItems = CONFIG.data.recordKeepingItems.map(item => ({ name: item, score: null }));
-        App.essentialsItems = CONFIG.data.essentialsItems.map(item => ({ name: item, score: null }));
-        App.safetyItems = CONFIG.data.safetyItems.map(item => ({ name: item, score: null }));
-        App.aestheticsItems = CONFIG.data.aestheticsItems.map(item => ({ ...item, score: null }));
-
-        ProgressComponent.init('progressContainer');
-        FormComponent.init('formContainer');
-        App.initializeScoreCards();
-        App.updateAllScores();
-      },
-
-      initializeScoreCards: () => {
-        const container = document.getElementById('scoreCardsContainer');
-
-        const createCard = (id, label, items, max, scoreKey) => {
-          const card = ScoreCardComponent.createScoreCard(id, label, items, max);
-          container.appendChild(card);
-          ScoreCardComponent.populateItems(id, items, CONFIG.scoring[scoreKey].scoreOptions);
-        };
-
-        createCard('cleanliness', 'Cleanliness', App.cleanlinessItems, 30, 'cleanliness');
-        createCard('defective', 'Defective Items', App.defectiveItems, 16, 'defective');
-        createCard('recordKeeping', 'Record Keeping', App.recordKeepingItems, 11, 'recordKeeping');
-        createCard('essentials', 'Essentials', App.essentialsItems, 10, 'essentials');
-        createCard('safety', 'Safety', App.safetyItems, 9, 'safety');
-
-        const aestheticsCard = ScoreCardComponent.createScoreCard('aesthetics', 'Aesthetics', App.aestheticsItems, 9);
-        container.appendChild(aestheticsCard);
-        ScoreCardComponent.populateItemsWithMap('aesthetics', App.aestheticsItems, CONFIG.scoring.aesthetics.scoreOptionsMap);
-      },
-
-      setScore: (type, itemIndex, score) => {
-        const map = {
-          cleanliness: App.cleanlinessItems,
-          defective: App.defectiveItems,
-          recordKeeping: App.recordKeepingItems,
-          essentials: App.essentialsItems,
-          safety: App.safetyItems,
-          aesthetics: App.aestheticsItems
-        };
-
-        if (map[type]) {
-          map[type][itemIndex].score = score;
-          if (type === 'aesthetics') {
-            ScoreCardComponent.populateItemsWithMap(type, map[type], CONFIG.scoring.aesthetics.scoreOptionsMap);
-          } else {
-            ScoreCardComponent.populateItems(type, map[type], CONFIG.scoring[type].scoreOptions);
-          }
-        }
-        App.updateAllScores();
-      },
-
-      updateAllScores: () => {
-        const types = ['cleanliness', 'defective', 'recordKeeping', 'essentials', 'safety', 'aesthetics'];
-        let totalCompleted = 0;
-        let totalPoints = 0;
-
-        const maxItems = {
-          cleanliness: 5,
-          defective: 8,
-          recordKeeping: 11,
-          essentials: 10,
-          safety: 9,
-          aesthetics: 9
-        };
-
-        types.forEach(type => {
-          const items = App[`${type}Items`];
-          const completed = Utils.countCompleted(items);
-          const points = Utils.calculateTotalPoints(items);
-          App.updateCardScore(type, completed, points, maxItems[type]);
-          totalCompleted += completed;
-          totalPoints += points;
-        });
-
-        ProgressComponent.update(totalCompleted, 52, totalPoints, 131);
-      },
-
-      updateCardScore: (type, completed, points, maxItems) => {
-        const scoreElement = document.getElementById(type + 'Score');
-        if (scoreElement) {
-          scoreElement.textContent = `${completed}/${points}`;
-          scoreElement.className = `current-score ${Utils.getProgressClass(completed, maxItems)}`;
-        }
-      }
-    };
-
-    document.addEventListener('DOMContentLoaded', App.init);
     </script>
 </body>
 </html>
