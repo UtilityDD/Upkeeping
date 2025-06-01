@@ -485,6 +485,52 @@ k<!DOCTYPE html>
     { name: 'Fans in control room', maxPoints: 2 }
 ],
 
+aesthetics: {
+    scoreOptionsMap: {
+        'Beds in control room': [
+            { label: 'Yes', score: -5 },
+            { label: 'No', score: 5 }
+        ],
+        'TV set in control room': [
+            { label: 'Yes', score: -5 },
+            { label: 'No', score: 5 },
+            { label: 'Sometimes', score: -3 }
+        ],
+        'Operating persons dressed properly?': [
+            { label: 'Yes', score: -5 },
+            { label: 'No', score: 5 }
+        ],
+        'Switchgear / feeder / PTR name-plates: large, good quality, painted or printed (not in normal page) or plastic sticker?': [
+            { label: 'Yes', score: 7 },
+            { label: 'No', score: -7 },
+            { label: 'Few', score: -3 }
+        ],
+        'Operating persons always uses helmet when enter switch yard?': [
+            { label: 'Yes', score: 5 },
+            { label: 'No', score: -5 }
+        ],
+        'Back-side of switchgears / panels': [
+            { label: 'Covered', score: 5 },
+            { label: 'Some are open', score: -3 },
+            { label: 'Most are open', score: -5 }
+        ],
+        'Cable trench': [
+            { label: 'Covered', score: 5 },
+            { label: 'Some are open', score: -3 },
+            { label: 'Most are open', score: -5 }
+        ],
+        'Is there flower bed / well maintained garden / plantation?': [
+            { label: 'Yes', score: 5 },
+            { label: 'Have, but poorly maintained', score: 3 },
+            { label: 'No', score: 0 }
+        ],
+        'Last condition monitoring issues complied with?': [
+            { label: 'Yes', score: 10 },
+            { label: 'Partially', score: -3 },
+            { label: 'No', score: -5 }
+        ]
+    }
+},
 
                 recordKeepingItems: [
                     'Standard size SLD',
@@ -524,6 +570,18 @@ k<!DOCTYPE html>
                     'Raincoat',
                     'Gumboot'
                 ],
+aestheticsItems: [
+    { name: 'Beds in control room', maxPoints: 5 },
+    { name: 'TV set in control room', maxPoints: 5 },
+    { name: 'Operating persons dressed properly?', maxPoints: 5 },
+    { name: 'Switchgear / feeder / PTR name-plates: large, good quality, painted or printed (not in normal page) or plastic sticker?', maxPoints: 7 },
+    { name: 'Operating persons always uses helmet when enter switch yard?', maxPoints: 5 },
+    { name: 'Back-side of switchgears / panels', maxPoints: 5 },
+    { name: 'Cable trench', maxPoints: 5 },
+    { name: 'Is there flower bed / well maintained garden / plantation?', maxPoints: 5 },
+    { name: 'Last condition monitoring issues complied with?', maxPoints: 10 }
+],
+
 
                 substations: {
                     'North Division': ['Rajouri Garden 33kV', 'Pitampura 66kV', 'Model Town 33kV', 'Rohini 220kV'],
