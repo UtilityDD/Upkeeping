@@ -920,6 +920,227 @@ header.addEventListener('click', () => {
 
         // Initialize app when DOM is loaded
         document.addEventListener('DOMContentLoaded', App.init);
+
+const ScoreCardComponent = {
+      createScoreCard: (type, title, items, maxScore) => {
+        const card = document.createElement('div');
+        card.className = 'score-card';
+        card.id = `${type}Card`;
+
+        const header = document.createElement('div');
+        header.className = `score-card-header ${type === 'defective' ? 'defective' : ''}`;
+        header.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <h3 style="margin: 0;">${title}</h3>
+            <span id="${type}Score" class="current-score">0/0</span>
+          </div>
+          <span class="toggle-icon">▼</span>
+        `;
+
+        const list = document.createElement('ul');
+        list.id = `${type}ItemList`;
+        list.className = 'score-item-list';
+        list.style.display = 'none';
+
+        header.addEventListener('click', () => {
+          const isVisible = list.style.display === 'block';
+          document.querySelectorAll('.score-item-list').forEach(el => el.style.display = 'none');
+          document.querySelectorAll('.toggle-icon').forEach(icon => icon.textContent = '▼');
+          if (!isVisible) {
+            list.style.display = 'block';
+            header.querySelector('.toggle-icon').textContent = '▲';
+          }
+        });
+
+        card.appendChild(header);
+        card.appendChild(list);
+        return card;
+      },
+
+      populateItems: (type, items, scoreOptions) => {
+        const list = document.getElementById(`${type}ItemList`);
+        if (!list) return;
+
+        list.innerHTML = '';
+        items.forEach((item, index) => {
+          const listItem = document.createElement('li');
+          listItem.className = 'score-item';
+          const label = document.createElement('span');
+          label.className = 'item-name';
+          label.textContent = item.name || item.label || item;
+
+          const controls = document.createElement('div');
+          controls.className = 'item-controls';
+
+          scoreOptions.forEach(option => {
+            const button = document.createElement('button');
+            button.className = `score-btn ${getScoreClass(option.score)}`;
+            button.textContent = option.label;
+
+            if (item.score === option.score) {
+              button.classList.add('selected');
+            }
+
+            button.addEventListener('click', () => {
+              App.setScore(type, index, option.score);
+            });
+
+            controls.appendChild(button);
+          });
+
+          listItem.appendChild(label);
+          listItem.appendChild(controls);
+          list.appendChild(listItem);
+        });
+      },
+
+      populateItemsWithMap: (type, items, scoreOptionsMap) => {
+        const list = document.getElementById(`${type}ItemList`);
+        if (!list) return;
+
+        list.innerHTML = '';
+        items.forEach((item, index) => {
+          const listItem = document.createElement('li');
+          listItem.className = 'score-item';
+          const label = document.createElement('span');
+          label.className = 'item-name';
+          label.textContent = item.name;
+
+          const controls = document.createElement('div');
+          controls.className = 'item-controls';
+          const options = CONFIG.scoring.aesthetics.scoreOptionsMap[item.name] || [];
+
+          options.forEach(option => {
+            const button = document.createElement('button');
+            button.className = `score-btn ${getScoreClass(option.score)}`;
+            button.textContent = option.label;
+
+            if (item.score === option.score) {
+              button.classList.add('selected');
+            }
+
+            button.addEventListener('click', () => {
+              App.setScore(type, index, option.score);
+            });
+
+            controls.appendChild(button);
+          });
+
+          listItem.appendChild(label);
+          listItem.appendChild(controls);
+          list.appendChild(listItem);
+        });
+      }
+    };
+
+    function getScoreClass(score) {
+      switch (score) {
+        case 2: return 'good';
+        case 1: return 'average';
+        case 0: return 'bad';
+        default: return '';
+      }
+    }
+
+    const App = {
+      cleanlinessItems: [],
+      defectiveItems: [],
+      recordKeepingItems: [],
+      essentialsItems: [],
+      safetyItems: [],
+      aestheticsItems: [],
+
+      init: () => {
+        App.cleanlinessItems = CONFIG.data.cleanlinessItems.map(item => ({...item, score: null}));
+        App.defectiveItems = CONFIG.data.defectiveItems.map(item => ({...item, score: null}));
+        App.recordKeepingItems = CONFIG.data.recordKeepingItems.map(item => ({ name: item, score: null }));
+        App.essentialsItems = CONFIG.data.essentialsItems.map(item => ({ name: item, score: null }));
+        App.safetyItems = CONFIG.data.safetyItems.map(item => ({ name: item, score: null }));
+        App.aestheticsItems = CONFIG.data.aestheticsItems.map(item => ({ ...item, score: null }));
+
+        ProgressComponent.init('progressContainer');
+        FormComponent.init('formContainer');
+        App.initializeScoreCards();
+        App.updateAllScores();
+      },
+
+      initializeScoreCards: () => {
+        const container = document.getElementById('scoreCardsContainer');
+
+        const createCard = (id, label, items, max, scoreKey) => {
+          const card = ScoreCardComponent.createScoreCard(id, label, items, max);
+          container.appendChild(card);
+          ScoreCardComponent.populateItems(id, items, CONFIG.scoring[scoreKey].scoreOptions);
+        };
+
+        createCard('cleanliness', 'Cleanliness', App.cleanlinessItems, 30, 'cleanliness');
+        createCard('defective', 'Defective Items', App.defectiveItems, 16, 'defective');
+        createCard('recordKeeping', 'Record Keeping', App.recordKeepingItems, 11, 'recordKeeping');
+        createCard('essentials', 'Essentials', App.essentialsItems, 10, 'essentials');
+        createCard('safety', 'Safety', App.safetyItems, 9, 'safety');
+
+        const aestheticsCard = ScoreCardComponent.createScoreCard('aesthetics', 'Aesthetics', App.aestheticsItems, 9);
+        container.appendChild(aestheticsCard);
+        ScoreCardComponent.populateItemsWithMap('aesthetics', App.aestheticsItems, CONFIG.scoring.aesthetics.scoreOptionsMap);
+      },
+
+      setScore: (type, itemIndex, score) => {
+        const map = {
+          cleanliness: App.cleanlinessItems,
+          defective: App.defectiveItems,
+          recordKeeping: App.recordKeepingItems,
+          essentials: App.essentialsItems,
+          safety: App.safetyItems,
+          aesthetics: App.aestheticsItems
+        };
+
+        if (map[type]) {
+          map[type][itemIndex].score = score;
+          if (type === 'aesthetics') {
+            ScoreCardComponent.populateItemsWithMap(type, map[type], CONFIG.scoring.aesthetics.scoreOptionsMap);
+          } else {
+            ScoreCardComponent.populateItems(type, map[type], CONFIG.scoring[type].scoreOptions);
+          }
+        }
+        App.updateAllScores();
+      },
+
+      updateAllScores: () => {
+        const types = ['cleanliness', 'defective', 'recordKeeping', 'essentials', 'safety', 'aesthetics'];
+        let totalCompleted = 0;
+        let totalPoints = 0;
+
+        const maxItems = {
+          cleanliness: 5,
+          defective: 8,
+          recordKeeping: 11,
+          essentials: 10,
+          safety: 9,
+          aesthetics: 9
+        };
+
+        types.forEach(type => {
+          const items = App[`${type}Items`];
+          const completed = Utils.countCompleted(items);
+          const points = Utils.calculateTotalPoints(items);
+          App.updateCardScore(type, completed, points, maxItems[type]);
+          totalCompleted += completed;
+          totalPoints += points;
+        });
+
+        ProgressComponent.update(totalCompleted, 52, totalPoints, 131);
+      },
+
+      updateCardScore: (type, completed, points, maxItems) => {
+        const scoreElement = document.getElementById(type + 'Score');
+        if (scoreElement) {
+          scoreElement.textContent = `${completed}/${points}`;
+          scoreElement.className = `current-score ${Utils.getProgressClass(completed, maxItems)}`;
+        }
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', App.init);
     </script>
 </body>
 </html>
