@@ -67,7 +67,7 @@
     }
 
     function renderSection(title, items) {
-      let html = `<div class='section'><h3>${title}</h3><table><tr><th>Item</th><th>Score</th><th>Max</th></tr>`;
+      let html = `<div class='section'><h3>${title}</h3><table><tr><th>Item (Options)</th><th>Score</th><th>Max</th></tr>`;
       let totalScore = 0;
       let totalMax = 0;
       items.forEach(i => {
@@ -78,7 +78,15 @@
         } else if (i.scoreOptions && Array.isArray(i.scoreOptions)) {
           max = Math.max(...i.scoreOptions.map(o => o.score));
         }
-        html += `<tr><td>${i.name}</td><td class='score'>${score}</td><td class='score'>${max}</td></tr>`;
+        let optionNotes = '';
+if (i.scoreOptions && Array.isArray(i.scoreOptions)) {
+  optionNotes = i.scoreOptions.map(opt => {
+    const isSelected = i.score === opt.score;
+    const label = isSelected ? `<i style='font-size: 0.75em;'>[${opt.label}]</i>` : `<i style='font-size: 0.75em; text-decoration: line-through; color: #888;'>[${opt.label}]</i>`;
+    return label;
+  }).join(' ');
+}
+html += `<tr><td>${i.name}<br/>${optionNotes}</td><td class='score'>${score}</td><td class='score'>${max}</td></tr>`;
         totalScore += (i.score || 0);
         totalMax += max;
       });
