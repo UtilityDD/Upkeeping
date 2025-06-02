@@ -740,9 +740,10 @@ types.push('aesthetics');
                     totalPoints += points;
                 });
 
- const overallMaxCompleted = 52;
-const overallMaxPoints = 86 + maxPossiblePointsFromAesthetics; // Estimate based on logic
+ const allItems = types.flatMap(type => App[`${type}Items`]);
 
+const overallMaxCompleted = allItems.length;
+const overallMaxPoints = allItems.reduce((sum, item) => sum + (item.maxPoints || 2), 0); // Default maxPoints = 2 if not set
 
                 ProgressComponent.update(totalCompleted, overallMaxCompleted, totalPoints, overallMaxPoints);
             },
