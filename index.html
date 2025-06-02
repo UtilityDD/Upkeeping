@@ -723,13 +723,14 @@ App.aestheticsItems = CONFIG.data.aestheticsItems.map(item => ({
                 let totalPoints = 0;
 
                 const maxItems = {
-                    cleanliness: 5,
-                    defective: 8,
-                    recordKeeping: 11,
-                    essentials: 10,
-                    safety: 9,
-                    aesthetics: 9
-                };
+    cleanliness: App.cleanlinessItems.length,
+    defective: App.defectiveItems.length,
+    recordKeeping: App.recordKeepingItems.length,
+    essentials: App.essentialsItems.length,
+    safety: App.safetyItems.length,
+    aesthetics: App.aestheticsItems.length
+};
+
 types.push('aesthetics');
                 types.forEach(type => {
                     const items = App[`${type}Items`];
