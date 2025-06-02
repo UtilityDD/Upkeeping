@@ -212,18 +212,7 @@ body {
         <!-- Score Cards Container -->
         <div id="scoreCardsContainer"></div>
 <div style="text-align:center; margin: 12px 0;">
-    <button id="downloadPDFBtn" style="
-        background: #1976d2;
-        color: white;
-        border: none;
-        padding: 10px 16px;
-        font-size: 0.85rem;
-        border-radius: 6px;
-        cursor: pointer;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    ">
-        📄 Download Printable PDF
-    </button>
+    
 </div>
 
 
@@ -787,17 +776,7 @@ scoreElement.textContent = `Item: ${completed} / Score: ${points}`;
         // Initialize app when DOM is loaded
         document.addEventListener('DOMContentLoaded', App.init);
 
-document.getElementById('downloadPDFBtn').addEventListener('click', () => {
-    const element = document.querySelector('.container');
-    const opt = {
-        margin:       0.2,
-        filename:     'Substation_ScoreSheet.pdf',
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true },
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
-    html2pdf().set(opt).from(element).save();
-});
+
 
 
     </script>
