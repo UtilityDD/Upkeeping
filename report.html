@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Substation Score Sheet Report</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #fff;
+      color: #000;
+    }
+    h1, h2 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .section {
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    table, th, td {
+      border: 1px solid #000;
+    }
+    th, td {
+      padding: 6px;
+      text-align: left;
+    }
+    .score {
+      text-align: right;
+      font-weight: bold;
+    }
+    .btn-download {
+      display: block;
+      width: fit-content;
+      margin: 20px auto;
+      padding: 10px 16px;
+      background: #1976d2;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Substation Upkeeping Score Sheet</h1>
+  <h2 id="substationTitle">Substation - Date</h2>
+
+  <div class="section" id="reportContent"></div>
+
+  <a href="#" class="btn-download" id="downloadBtn">Download PDF</a>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+    // Load data from localStorage
+    const data = JSON.parse(localStorage.getItem('scoreReport'));
+
+    function renderSection(title, items) {
+      let html = `<div class='section'><h3>${title}</h3><table><tr><th>Item</th><th>Score</th></tr>`;
+      let total = 0;
+      items.forEach(i => {
+        html += `<tr><td>${i.name}</td><td class='score'>${i.score != null ? i.score : '-'}</td></tr>`;
+        total += (i.score || 0);
+      });
+      html += `<tr><td><strong>Total</strong></td><td class='score'><strong>${total}</strong></td></tr>`;
+      html += `</table></div>`;
+      return html;
+    }
+
+    if (data) {
+      document.getElementById('substationTitle').textContent = `${data.ssName} - ${data.date}`;
+      let sections = '';
+      ['cleanliness', 'defective', 'recordKeeping', 'essentials', 'safety', 'aesthetics'].forEach(key => {
+        if (data[key]) {
+          sections += renderSection(key.charAt(0).toUpperCase() + key.slice(1), data[key]);
+        }
+      });
+      document.getElementById('reportContent').innerHTML = sections;
+    } else {
+      document.getElementById('reportContent').innerHTML = '<p>No data found. Please generate the report from the main app.</p>';
+    }
+
+    document.getElementById('downloadBtn').addEventListener('click', () => {
+      html2pdf().from(document.body).save('Substation_ScoreSheet_Report.pdf');
+    });
+  </script>
+</body>
+</html>
