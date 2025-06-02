@@ -843,7 +843,32 @@ const reportData = {
 });
 
 
-document.getElementById('submitBtn').addEventListener('click', async () => {
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('submitBtn').addEventListener('click', () => {
+        document.getElementById('pinInput').value = '';
+        document.getElementById('pinModal').style.display = 'flex';
+    });
+
+    document.getElementById('pinSubmitBtn').addEventListener('click', () => {
+        const pin = document.getElementById('pinInput').value.trim();
+        const allowedPins = ['1245', '2367', '3287'];
+
+        if (allowedPins.includes(pin)) {
+            document.getElementById('pinModal').style.display = 'none';
+            submitReport();
+        } else {
+            document.getElementById('pinModal').style.display = 'none';
+            showModal('❌ Wrong PIN!', null, null, { hideCancel: true });
+        }
+    });
+
+    document.getElementById('pinCancelBtn').addEventListener('click', () => {
+        document.getElementById('pinModal').style.display = 'none';
+    });
+});
+
+
+async function submitReport() {
     const date = document.getElementById('visitDate').value;
     const ssName = document.getElementById('ssName').value;
     const supervisor = document.getElementById('supervisor').value;
@@ -865,7 +890,6 @@ document.getElementById('submitBtn').addEventListener('click', async () => {
     }
 
     showModal("Do you want to submit the report?", async () => {
-        // Show loading animation
         showModal("Submitting report...", null, null, { showLoader: true });
 
         const enrichWithOptions = (items, type) => {
@@ -895,7 +919,6 @@ document.getElementById('submitBtn').addEventListener('click', async () => {
                 body: JSON.stringify(reportData)
             });
 
-            // Show success modal, hide cancel, and refresh on OK
             showModal('✅ Successfully Submitted.', () => {
                 window.location.reload();
             }, null, { hideCancel: true });
@@ -905,9 +928,10 @@ document.getElementById('submitBtn').addEventListener('click', async () => {
             showModal('❌ Submission failed.', null, null);
         }
     }, () => {
-        // Cancel clicked — do nothing
+        // Cancelled
     });
-});
+}
+
 
 
   // Modal logic
@@ -946,6 +970,7 @@ function showModal(message, onOk = null, onCancel = null, options = {}) {
     };
 }
 
+
     </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -966,6 +991,18 @@ background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:ce
             <button id="modalCancelBtn" style="padding:6px 12px;">Cancel</button>
         </div>
     </div>
+</div>
+<!-- PIN Modal -->
+<div id="pinModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+background:rgba(0,0,0,0.5); z-index:1001; justify-content:center; align-items:center;">
+  <div style="background:white; padding:20px; border-radius:8px; max-width:300px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.3);">
+    <div style="margin-bottom:10px; font-size:0.9rem;">🔐 Enter PIN to Submit</div>
+    <input type="password" id="pinInput" style="width:100%; padding:6px; margin-bottom:10px;" placeholder="Enter PIN">
+    <div>
+      <button id="pinSubmitBtn" style="margin-right:10px; padding:6px 12px;">OK</button>
+      <button id="pinCancelBtn" style="padding:6px 12px;">Cancel</button>
+    </div>
+  </div>
 </div>
 
 <style>
