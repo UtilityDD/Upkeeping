@@ -222,9 +222,26 @@ body {
         cursor: pointer;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     ">
-        🧾 Generate Printable Report
+        🧾 Generate Report
     </button>
+
+    <button id="submitBtn" style="
+        background: #1976d2;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-left: 10px;
+    ">
+        📤 Submit
+    </button>
+
+    <div id="submitStatus" style="margin-top: 8px; font-size: 0.8rem; color: #555;"></div>
 </div>
+
 
 
 
@@ -288,13 +305,16 @@ body {
             },
 
             data: {
-                cleanlinessItems: [
-                    { name: 'Control room-inside', maxPoints: 2 },
-                    { name: 'Control room-outside', maxPoints: 2 },
-                    { name: 'Bathroom', maxPoints: 2 },
-                    { name: 'Battery Room', maxPoints: 2 },
-                    { name: 'Roof and surroundings', maxPoints: 2 }
-                ],
+cleanlinessItems: [
+    { name: 'Control room building - inside', maxPoints: 2 },
+    { name: 'Control room building - outside', maxPoints: 2 },
+    { name: 'Switchgears, panels', maxPoints: 2 },
+    { name: 'Switch Yard', maxPoints: 2 },
+    { name: 'Battery room', maxPoints: 2 },
+    { name: 'Bathroom / toilet', maxPoints: 2 },
+    { name: 'Roof & surroundings', maxPoints: 2 }
+],
+
                 
 defectiveItems: [
     { name: 'Switchgear', maxPoints: 2 },
@@ -549,7 +569,8 @@ getProgressClass: (completed, total) => {
                         </div>
                         <div class="form-row">
                             <input type="date" class="form-input" id="visitDate">
-                            <input type="text" class="form-input" id="supervisor" placeholder="Supervising DE/AE Name">
+<input type="text" class="form-input" id="supervisor" placeholder="Supervising DE/AE Name">
+<input type="text" class="form-input" id="inspectingOfficer" placeholder="Inspecting Officer Name">
                         </div>
                     </div>
                 `;
@@ -774,7 +795,13 @@ types.push('aesthetics');
  const allItems = types.flatMap(type => App[`${type}Items`]);
 
 const overallMaxCompleted = allItems.length;
-const overallMaxPoints = allItems.reduce((sum, item) => sum + (item.maxPoints || 2), 0); // Default maxPoints = 2 if not set
+const overallMaxPoints = allItems.reduce((sum, item) => {
+    if (item.maxPoints != null) return sum + item.maxPoints;
+    if (item.scoreOptions && Array.isArray(item.scoreOptions)) {
+        return sum + Math.max(...item.scoreOptions.map(o => o.score));
+    }
+    return sum + 2; // default fallback
+}, 0);
 
                 ProgressComponent.update(totalCompleted, overallMaxCompleted, totalPoints, overallMaxPoints);
             },
@@ -793,15 +820,22 @@ scoreElement.textContent = `Item: ${completed} / Score: ${points}`;
 
 
 document.getElementById('generateReportBtn').addEventListener('click', () => {
-    const reportData = {
-        date: document.getElementById('visitDate').value,
-        ssName: document.getElementById('ssName').value,
-        cleanliness: App.cleanlinessItems,
-        defective: App.defectiveItems,
-        recordKeeping: App.recordKeepingItems,
-        essentials: App.essentialsItems,
-        safety: App.safetyItems,
-        aesthetics: App.aestheticsItems
+    const enrichWithOptions = (items, type) => {
+        const options = CONFIG.scoring[type].scoreOptions;
+        return items.map(item => ({ ...item, scoreOptions: options }));
+    };
+
+const reportData = {
+    date: document.getElementById('visitDate').value,
+    ssName: document.getElementById('ssName').value,
+    supervisor: document.getElementById('supervisor').value,
+    inspectingOfficer: document.getElementById('inspectingOfficer').value,
+        cleanliness: enrichWithOptions(App.cleanlinessItems, 'cleanliness'),
+        defective: enrichWithOptions(App.defectiveItems, 'defective'),
+        recordKeeping: enrichWithOptions(App.recordKeepingItems, 'recordKeeping'),
+        essentials: enrichWithOptions(App.essentialsItems, 'essentials'),
+        safety: enrichWithOptions(App.safetyItems, 'safety'),
+        aesthetics: App.aestheticsItems // already contains scoreOptions
     };
 
     localStorage.setItem('scoreReport', JSON.stringify(reportData));
@@ -809,6 +843,42 @@ document.getElementById('generateReportBtn').addEventListener('click', () => {
 });
 
 
+document.getElementById('submitBtn').addEventListener('click', async () => {
+    const status = document.getElementById('submitStatus');
+    status.textContent = 'Submitting report...';
+
+    const enrichWithOptions = (items, type) => {
+        const options = CONFIG.scoring[type].scoreOptions;
+        return items.map(item => ({ ...item, scoreOptions: options }));
+    };
+
+    const reportData = {
+        timestamp: new Date().toISOString(),
+        date: document.getElementById('visitDate').value,
+        ssName: document.getElementById('ssName').value,
+        supervisor: document.getElementById('supervisor').value,
+        inspectingOfficer: document.getElementById('inspectingOfficer').value,
+        cleanliness: enrichWithOptions(App.cleanlinessItems, 'cleanliness'),
+        defective: enrichWithOptions(App.defectiveItems, 'defective'),
+        recordKeeping: enrichWithOptions(App.recordKeepingItems, 'recordKeeping'),
+        essentials: enrichWithOptions(App.essentialsItems, 'essentials'),
+        safety: enrichWithOptions(App.safetyItems, 'safety'),
+        aesthetics: App.aestheticsItems
+    };
+
+    try {
+        await fetch('https://script.google.com/macros/s/AKfycbx_nND_ePwV8S6Ol2mgkGUpAhfZWiI2lr6_rB9_P_dLiuep--b6EjuQ_-wjVMAnOSaO/exec', {
+            method: 'POST',
+            mode: 'no-cors', // Use 'cors' if your script is deployed with appropriate CORS headers
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(reportData)
+        });
+        status.textContent = '✅ Successfully Submitted.';
+    } catch (error) {
+        console.error('Submission error:', error);
+        status.textContent = '❌ Submission failed.';
+    }
+});
     </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
