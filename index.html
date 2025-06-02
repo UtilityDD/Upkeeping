@@ -844,44 +844,137 @@ const reportData = {
 
 
 document.getElementById('submitBtn').addEventListener('click', async () => {
-    const status = document.getElementById('submitStatus');
-    status.textContent = 'Submitting report...';
+    const date = document.getElementById('visitDate').value;
+    const ssName = document.getElementById('ssName').value;
+    const supervisor = document.getElementById('supervisor').value;
+    const inspectingOfficer = document.getElementById('inspectingOfficer').value;
 
-    const enrichWithOptions = (items, type) => {
-        const options = CONFIG.scoring[type].scoreOptions;
-        return items.map(item => ({ ...item, scoreOptions: options }));
-    };
+    const allItems = [
+        ...App.cleanlinessItems,
+        ...App.defectiveItems,
+        ...App.recordKeepingItems,
+        ...App.essentialsItems,
+        ...App.safetyItems,
+        ...App.aestheticsItems
+    ];
+    const hasBlankScore = allItems.some(item => item.score === null);
 
-    const reportData = {
-        timestamp: new Date().toISOString(),
-        date: document.getElementById('visitDate').value,
-        ssName: document.getElementById('ssName').value,
-        supervisor: document.getElementById('supervisor').value,
-        inspectingOfficer: document.getElementById('inspectingOfficer').value,
-        cleanliness: enrichWithOptions(App.cleanlinessItems, 'cleanliness'),
-        defective: enrichWithOptions(App.defectiveItems, 'defective'),
-        recordKeeping: enrichWithOptions(App.recordKeepingItems, 'recordKeeping'),
-        essentials: enrichWithOptions(App.essentialsItems, 'essentials'),
-        safety: enrichWithOptions(App.safetyItems, 'safety'),
-        aesthetics: App.aestheticsItems
-    };
-
-    try {
-        await fetch('https://script.google.com/macros/s/AKfycbx_nND_ePwV8S6Ol2mgkGUpAhfZWiI2lr6_rB9_P_dLiuep--b6EjuQ_-wjVMAnOSaO/exec', {
-            method: 'POST',
-            mode: 'no-cors', // Use 'cors' if your script is deployed with appropriate CORS headers
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(reportData)
-        });
-        status.textContent = '✅ Successfully Submitted.';
-    } catch (error) {
-        console.error('Submission error:', error);
-        status.textContent = '❌ Submission failed.';
+    if (!date || !ssName || !supervisor || !inspectingOfficer || hasBlankScore) {
+        showModal('❗ Fill all data!', null, null);
+        return;
     }
+
+    showModal("Do you want to submit the report?", async () => {
+        // Show loading animation
+        showModal("Submitting report...", null, null, { showLoader: true });
+
+        const enrichWithOptions = (items, type) => {
+            const options = CONFIG.scoring[type].scoreOptions;
+            return items.map(item => ({ ...item, scoreOptions: options }));
+        };
+
+        const reportData = {
+            timestamp: new Date().toISOString(),
+            date,
+            ssName,
+            supervisor,
+            inspectingOfficer,
+            cleanliness: enrichWithOptions(App.cleanlinessItems, 'cleanliness'),
+            defective: enrichWithOptions(App.defectiveItems, 'defective'),
+            recordKeeping: enrichWithOptions(App.recordKeepingItems, 'recordKeeping'),
+            essentials: enrichWithOptions(App.essentialsItems, 'essentials'),
+            safety: enrichWithOptions(App.safetyItems, 'safety'),
+            aesthetics: App.aestheticsItems
+        };
+
+        try {
+            await fetch('https://script.google.com/macros/s/AKfycbx_nND_ePwV8S6Ol2mgkGUpAhfZWiI2lr6_rB9_P_dLiuep--b6EjuQ_-wjVMAnOSaO/exec', {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(reportData)
+            });
+
+            // Show success modal, hide cancel, and refresh on OK
+            showModal('✅ Successfully Submitted.', () => {
+                window.location.reload();
+            }, null, { hideCancel: true });
+
+        } catch (error) {
+            console.error('Submission error:', error);
+            showModal('❌ Submission failed.', null, null);
+        }
+    }, () => {
+        // Cancel clicked — do nothing
+    });
 });
+
+
+  // Modal logic
+function showModal(message, onOk = null, onCancel = null, options = {}) {
+    const modal = document.getElementById('alertModal');
+    const messageEl = document.getElementById('modalMessage');
+    const okBtn = document.getElementById('modalOkBtn');
+    const cancelBtn = document.getElementById('modalCancelBtn');
+    const loader = document.getElementById('modalLoader');
+    const buttons = document.getElementById('modalButtons');
+
+    messageEl.textContent = message;
+
+    // Show loader or buttons
+    if (options.showLoader) {
+        loader.style.display = 'block';
+        buttons.style.display = 'none';
+    } else {
+        loader.style.display = 'none';
+        buttons.style.display = 'block';
+    }
+
+    // Show/hide Cancel based on options
+    cancelBtn.style.display = options.hideCancel ? 'none' : 'inline-block';
+
+    modal.style.display = 'flex';
+
+    okBtn.onclick = () => {
+        modal.style.display = 'none';
+        if (onOk) onOk();
+    };
+
+    cancelBtn.onclick = () => {
+        modal.style.display = 'none';
+        if (onCancel) onCancel();
+    };
+}
+
     </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<!-- Modal -->
+<!-- Modal -->
+<div id="alertModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
+    <div style="background:white; padding:20px; border-radius:8px; max-width:300px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.3); position:relative;">
+        <div id="modalMessage" style="margin-bottom:20px; font-size:0.9rem;"></div>
+
+        <!-- Loader -->
+        <div id="modalLoader" style="display:none; margin-bottom: 10px;">
+            <div style="border: 4px solid #f3f3f3; border-top: 4px solid #1976d2; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+        </div>
+
+        <div id="modalButtons">
+            <button id="modalOkBtn" style="margin-right:10px; padding:6px 12px;">OK</button>
+            <button id="modalCancelBtn" style="padding:6px 12px;">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+
 
 </body>
 </html>
