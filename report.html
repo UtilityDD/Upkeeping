@@ -45,6 +45,24 @@
       border-radius: 4px;
       font-size: 0.9rem;
     }
+    @media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  table, th, td {
+    page-break-inside: avoid;
+  }
+
+  .section {
+    page-break-after: always;
+  }
+
+  .btn-download {
+    display: none;
+  }
+    }
   </style>
 </head>
 <body>
@@ -86,7 +104,17 @@
     }
 
     document.getElementById('downloadBtn').addEventListener('click', () => {
-      html2pdf().from(document.body).save('Substation_ScoreSheet_Report.pdf');
+      const element = document.body;
+const opt = {
+  margin:       0.5,
+  filename:     'Substation_ScoreSheet_Report.pdf',
+  image:        { type: 'jpeg', quality: 0.98 },
+  html2canvas:  { scale: 2, useCORS: true },
+  jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' },
+  pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+};
+
+html2pdf().set(opt).from(element).save();
     });
   </script>
 </body>
