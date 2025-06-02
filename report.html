@@ -64,7 +64,6 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
-    // Load data from localStorage
     const data = JSON.parse(localStorage.getItem('scoreReport'));
 
     function renderSection(title, items) {
@@ -73,7 +72,12 @@
       let totalMax = 0;
       items.forEach(i => {
         const score = i.score != null ? i.score : '-';
-        const max = i.maxPoints != null ? i.maxPoints : 2; // default max
+        let max = 2;
+        if (i.maxPoints != null) {
+          max = i.maxPoints;
+        } else if (i.scoreOptions && Array.isArray(i.scoreOptions)) {
+          max = Math.max(...i.scoreOptions.map(o => o.score));
+        }
         html += `<tr><td>${i.name}</td><td class='score'>${score}</td><td class='score'>${max}</td></tr>`;
         totalScore += (i.score || 0);
         totalMax += max;
