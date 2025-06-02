@@ -46,22 +46,9 @@
       font-size: 0.9rem;
     }
     @media print {
-  body {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  table, th, td {
-    page-break-inside: avoid;
-  }
-
-  .section {
-    page-break-after: always;
-  }
-
-  .btn-download {
-    display: none;
-  }
+      .btn-download { display: none; }
+      .section { page-break-after: always; }
+      table, th, td { page-break-inside: avoid; }
     }
   </style>
 </head>
@@ -71,6 +58,8 @@
 
   <div class="section" id="reportContent"></div>
 
+  <div class="section" id="finalTotal"></div>
+
   <a href="#" class="btn-download" id="downloadBtn">Download PDF</a>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -79,42 +68,60 @@
     const data = JSON.parse(localStorage.getItem('scoreReport'));
 
     function renderSection(title, items) {
-      let html = `<div class='section'><h3>${title}</h3><table><tr><th>Item</th><th>Score</th></tr>`;
-      let total = 0;
+      let html = `<div class='section'><h3>${title}</h3><table><tr><th>Item</th><th>Score Obtained</th><th>Max Score</th></tr>`;
+      let totalScore = 0;
+      let totalMax = 0;
       items.forEach(i => {
-        html += `<tr><td>${i.name}</td><td class='score'>${i.score != null ? i.score : '-'}</td></tr>`;
-        total += (i.score || 0);
+        const score = i.score != null ? i.score : '-';
+        const max = i.maxPoints != null ? i.maxPoints : 2; // default max
+        html += `<tr><td>${i.name}</td><td class='score'>${score}</td><td class='score'>${max}</td></tr>`;
+        totalScore += (i.score || 0);
+        totalMax += max;
       });
-      html += `<tr><td><strong>Total</strong></td><td class='score'><strong>${total}</strong></td></tr>`;
+      html += `<tr><td><strong>Total</strong></td><td class='score'><strong>${totalScore}</strong></td><td class='score'><strong>${totalMax}</strong></td></tr>`;
       html += `</table></div>`;
-      return html;
+      return { html, totalScore, totalMax };
     }
 
     if (data) {
       document.getElementById('substationTitle').textContent = `${data.ssName} - ${data.date}`;
       let sections = '';
+      let grandScore = 0;
+      let grandMax = 0;
       ['cleanliness', 'defective', 'recordKeeping', 'essentials', 'safety', 'aesthetics'].forEach(key => {
         if (data[key]) {
-          sections += renderSection(key.charAt(0).toUpperCase() + key.slice(1), data[key]);
+          const { html, totalScore, totalMax } = renderSection(
+            key.charAt(0).toUpperCase() + key.slice(1),
+            data[key]
+          );
+          sections += html;
+          grandScore += totalScore;
+          grandMax += totalMax;
         }
       });
       document.getElementById('reportContent').innerHTML = sections;
+      document.getElementById('finalTotal').innerHTML = `
+        <h2>Grand Total</h2>
+        <table>
+          <tr><th>Total Score Obtained</th><th>Maximum Possible Score</th></tr>
+          <tr><td class='score'>${grandScore}</td><td class='score'>${grandMax}</td></tr>
+        </table>
+      `;
     } else {
       document.getElementById('reportContent').innerHTML = '<p>No data found. Please generate the report from the main app.</p>';
     }
 
     document.getElementById('downloadBtn').addEventListener('click', () => {
       const element = document.body;
-const opt = {
-  margin:       0.5,
-  filename:     'Substation_ScoreSheet_Report.pdf',
-  image:        { type: 'jpeg', quality: 0.98 },
-  html2canvas:  { scale: 2, useCORS: true },
-  jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' },
-  pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
-};
-
-html2pdf().set(opt).from(element).save();
+      const opt = {
+        margin: 0.5,
+        filename: 'Substation_ScoreSheet_Report.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      };
+      html2pdf().set(opt).from(element).save();
     });
   </script>
 </body>
