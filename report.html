@@ -30,6 +30,7 @@
     th, td {
       padding: 4px;
       text-align: left;
+      vertical-align: top;
     }
     .score {
       text-align: right;
@@ -78,15 +79,19 @@
         } else if (i.scoreOptions && Array.isArray(i.scoreOptions)) {
           max = Math.max(...i.scoreOptions.map(o => o.score));
         }
+
         let optionNotes = '';
-if (i.scoreOptions && Array.isArray(i.scoreOptions)) {
-  optionNotes = i.scoreOptions.map(opt => {
-    const isSelected = i.score === opt.score;
-    const label = isSelected ? `<i style='font-size: 0.75em;'>[${opt.label}]</i>` : `<i style='font-size: 0.75em; text-decoration: line-through; color: #888;'>[${opt.label}]</i>`;
-    return label;
-  }).join(' ');
-}
-html += `<tr><td>${i.name}<br/>${optionNotes}</td><td class='score'>${score}</td><td class='score'>${max}</td></tr>`;
+        if (i.scoreOptions && Array.isArray(i.scoreOptions)) {
+          optionNotes = i.scoreOptions.map(opt => {
+            const isSelected = i.score === opt.score;
+            const label = opt.label;
+            return isSelected
+              ? `<span style='font-size: 0.75em; font-style: italic;'>[${label}]</span>`
+              : `<span style='font-size: 0.75em; font-style: italic; text-decoration: line-through; color: #999;'>[${label}]</span>`;
+          }).join(' ');
+        }
+
+        html += `<tr><td>${i.name}${optionNotes ? '<br/>' + optionNotes : ''}</td><td class='score'>${score}</td><td class='score'>${max}</td></tr>`;
         totalScore += (i.score || 0);
         totalMax += max;
       });
