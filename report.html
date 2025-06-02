@@ -59,7 +59,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
     const data = JSON.parse(localStorage.getItem('scoreReport'));
-    const inspectingOfficer = prompt("Enter Inspecting Officer's Name:");
 
     function formatDate(input) {
       if (!input) return '-';
@@ -91,7 +90,7 @@
           }).join(' ');
         }
 
-        html += `<tr><td>${i.name}${optionNotes ? '<br/>' + optionNotes : ''}</td><td class='score'>${score}</td><td class='score'>${max}</td></tr>`;
+html += `<tr><td>${i.name}<span style="margin-left: 8px;">${optionNotes || ''}</span></td><td class='score'>${score}</td><td class='score'>${max}</td></tr>`;
         totalScore += (i.score || 0);
         totalMax += max;
       });
@@ -103,7 +102,10 @@
     if (data) {
       const dateFormatted = formatDate(data.date);
       document.getElementById('substationTitle').textContent = `${data.ssName} - ${dateFormatted}`;
-      document.getElementById('officerName').textContent = `Supervising AE/DE: ${data.supervisor || '-'}`;
+document.getElementById('officerName').innerHTML = `
+    <div><strong>Supervising AE/DE:</strong> ${data.supervisor || '-'}</div>
+    <div><strong>Inspecting Officer:</strong> ${data.inspectingOfficer || '-'}</div>
+`;
 
       let sections = '';
       let grandScore = 0;
@@ -127,7 +129,7 @@
           <tr><td class='score'>${grandScore}</td><td class='score'>${grandMax}</td></tr>
         </table>
       `;
-      document.getElementById('footerInfo').innerHTML = `<strong>Inspecting Officer:</strong> ${inspectingOfficer || '-'}`;
+document.getElementById('footerInfo').innerHTML = `<strong>Inspecting Officer:</strong> ${data.inspectingOfficer || '-'}`;
     } else {
       document.getElementById('reportContent').innerHTML = '<p>No data found. Please generate the report from the main app.</p>';
     }
