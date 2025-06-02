@@ -212,7 +212,22 @@ body {
         <!-- Score Cards Container -->
         <div id="scoreCardsContainer"></div>
 <div style="text-align:center; margin: 12px 0;">
-    
+    <button id="generateReportBtn" style="
+        background: #388e3c;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    ">
+        🧾 Generate Printable Report
+    </button>
+</div>
+
+
+
 </div>
 
 
@@ -777,6 +792,21 @@ scoreElement.textContent = `Item: ${completed} / Score: ${points}`;
         document.addEventListener('DOMContentLoaded', App.init);
 
 
+document.getElementById('generateReportBtn').addEventListener('click', () => {
+    const reportData = {
+        date: document.getElementById('visitDate').value,
+        ssName: document.getElementById('ssName').value,
+        cleanliness: App.cleanlinessItems,
+        defective: App.defectiveItems,
+        recordKeeping: App.recordKeepingItems,
+        essentials: App.essentialsItems,
+        safety: App.safetyItems,
+        aesthetics: App.aestheticsItems
+    };
+
+    localStorage.setItem('scoreReport', JSON.stringify(reportData));
+    window.open('report.html', '_blank');
+});
 
 
     </script>
