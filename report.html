@@ -7,46 +7,40 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
+      padding: 16px;
       background: #fff;
       color: #000;
+      font-size: 12px;
     }
-    h1, h2 {
+    h1, h2, h3 {
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
     }
     .section {
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
+      margin-top: 6px;
     }
     table, th, td {
       border: 1px solid #000;
     }
     th, td {
-      padding: 6px;
+      padding: 4px;
       text-align: left;
     }
     .score {
       text-align: right;
       font-weight: bold;
     }
-    .btn-download {
-      display: block;
-      width: fit-content;
-      margin: 20px auto;
-      padding: 10px 16px;
-      background: #1976d2;
-      color: white;
-      text-decoration: none;
-      border-radius: 4px;
-      font-size: 0.9rem;
+    .footer {
+      margin-top: 20px;
+      font-size: 12px;
+      text-align: left;
     }
     @media print {
-      .btn-download { display: none; }
       .section { page-break-after: always; }
       table, th, td { page-break-inside: avoid; }
     }
@@ -55,19 +49,25 @@
 <body>
   <h1>Substation Upkeeping Score Sheet</h1>
   <h2 id="substationTitle">Substation - Date</h2>
+  <h3 id="officerName"></h3>
 
   <div class="section" id="reportContent"></div>
-
   <div class="section" id="finalTotal"></div>
-
-  <a href="#" class="btn-download" id="downloadBtn">Download PDF</a>
+  <div class="footer" id="footerInfo"></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
     const data = JSON.parse(localStorage.getItem('scoreReport'));
+    const inspectingOfficer = prompt("Enter Inspecting Officer's Name:");
+
+    function formatDate(input) {
+      if (!input) return '-';
+      const d = new Date(input);
+      return d.toLocaleDateString('en-GB');
+    }
 
     function renderSection(title, items) {
-      let html = `<div class='section'><h3>${title}</h3><table><tr><th>Item</th><th>Score Obtained</th><th>Max Score</th></tr>`;
+      let html = `<div class='section'><h3>${title}</h3><table><tr><th>Item</th><th>Score</th><th>Max</th></tr>`;
       let totalScore = 0;
       let totalMax = 0;
       items.forEach(i => {
@@ -88,7 +88,10 @@
     }
 
     if (data) {
-      document.getElementById('substationTitle').textContent = `${data.ssName} - ${data.date}`;
+      const dateFormatted = formatDate(data.date);
+      document.getElementById('substationTitle').textContent = `${data.ssName} - ${dateFormatted}`;
+      document.getElementById('officerName').textContent = `Supervising AE/DE: ${data.supervisor || '-'}`;
+
       let sections = '';
       let grandScore = 0;
       let grandMax = 0;
@@ -105,28 +108,29 @@
       });
       document.getElementById('reportContent').innerHTML = sections;
       document.getElementById('finalTotal').innerHTML = `
-        <h2>Grand Total</h2>
+        <h3>Grand Total</h3>
         <table>
-          <tr><th>Total Score Obtained</th><th>Maximum Possible Score</th></tr>
+          <tr><th>Total Score</th><th>Max Score</th></tr>
           <tr><td class='score'>${grandScore}</td><td class='score'>${grandMax}</td></tr>
         </table>
       `;
+      document.getElementById('footerInfo').innerHTML = `<strong>Inspecting Officer:</strong> ${inspectingOfficer || '-'}`;
     } else {
       document.getElementById('reportContent').innerHTML = '<p>No data found. Please generate the report from the main app.</p>';
     }
 
     window.onload = () => {
-  const element = document.body;
-  const opt = {
-    margin: 0.5,
-    filename: 'Substation_ScoreSheet_Report.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-  };
-  html2pdf().set(opt).from(element).save();
-};
+      const element = document.body;
+      const opt = {
+        margin: 0.3,
+        filename: 'Substation_ScoreSheet_Report.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      };
+      html2pdf().set(opt).from(element).save();
+    };
   </script>
 </body>
 </html>
